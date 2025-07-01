@@ -21,7 +21,7 @@ export default function MovieCard({ item }: MovieCardProps) {
       <TouchableWithoutFeedback className="text-white">
         <Image
           source={{
-            uri: `${image185(item?.backdrop_path || item?.poster_path)}`,
+            uri: `${image185(item?.poster_path)}`,
           }}
           style={styles.image}
         />
