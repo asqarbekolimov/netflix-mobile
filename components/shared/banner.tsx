@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View } from "@/components/Themed";
+import { Text, View } from "react-native";
 import { IMovie } from "@/types";
 import { imageOriginal } from "@/lib/api";
 import {
@@ -12,7 +12,6 @@ import Header from "@/components/shared/header";
 import { LinearGradient } from "expo-linear-gradient";
 import { HeaderTabs } from "@/constants";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
 
 type Props = {
   movies: IMovie[];
@@ -39,8 +38,6 @@ export default function Banner({ movies }: Props) {
         colors={["transparent", "black"]}
         style={styles.infoWrapper}
         locations={[0, 1]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
       >
         <View style={styles.infoContianer}>
           <View style={styles.tabWrapper}>
@@ -107,11 +104,13 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 18,
     fontWeight: "bold",
+    color: "white",
   },
   title: {
     fontSize: 30,
     fontWeight: "bold",
     textAlign: "center",
+    color: "white",
   },
   menu: {
     width: "100%",
