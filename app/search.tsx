@@ -79,7 +79,7 @@ export default function Search() {
             {results.map((movie) => (
               <TouchableOpacity
                 key={movie.id}
-                onPress={() => router.push(`/details/${movie.id}`)}
+                onPress={() => router.push(`/movie/${movie.id}`)}
               >
                 <Image
                   source={{
