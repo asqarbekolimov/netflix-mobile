@@ -8,6 +8,7 @@ import {
 import React from "react";
 import { IMovie } from "@/types";
 import { image185 } from "@/lib/api";
+import { usePathname, useRouter } from "expo-router";
 
 type MovieCardProps = {
   item: IMovie;
@@ -16,9 +17,17 @@ type MovieCardProps = {
 const { width, height } = Dimensions.get("window");
 
 export default function MovieCard({ item }: MovieCardProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+
   return (
     <View>
-      <TouchableWithoutFeedback className="text-white">
+      <TouchableWithoutFeedback
+        className="text-white"
+        onPress={() =>
+          router.push(`/movie/${item?.id}?type=${pathname === "/tv" && "tv"}`)
+        }
+      >
         <Image
           source={{
             uri: `${image185(item?.poster_path)}`,

@@ -68,6 +68,30 @@ export const movieDetials = async (id: number, type: string) => {
   }
 };
 
+export const movieCredits = async (id: number, type: string) => {
+  try {
+    const { data } = await axios.get(
+      `${API_BASE_URL}/${type}/${id}/credits?api_key=${API_KEY}`
+    );
+    return data && data.cast;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const similarMovies = async (id: number, type: string) => {
+  try {
+    const { data } = await axios.get(
+      `${API_BASE_URL}/${type}/${id}/similar?api_key=${API_KEY}`
+    );
+    return data && data.results;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Image URL functions
+
 export const imageOriginal = (path?: string) => {
   return `${IMAGE_BASE_URL}/original${path}`;
 };

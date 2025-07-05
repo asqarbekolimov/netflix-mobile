@@ -5,32 +5,58 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
+  FlatList,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Stack, useGlobalSearchParams } from "expo-router";
-import { image500, movieDetials } from "@/lib/api";
-import { IMovie } from "@/types";
+import {
+  Stack,
+  useGlobalSearchParams,
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
+import { image500, movieCredits, movieDetials, similarMovies } from "@/lib/api";
+import { IActor, IMovie } from "@/types";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Loader from "@/components/shared/loader";
 import { LinearGradient } from "expo-linear-gradient";
+import ActorCard from "@/components/card/actor-card";
+import MovieCard from "@/components/card/movie-card";
 
 const { width, height } = Dimensions.get("window");
 
 export default function MovieDetail() {
   const [movie, setMovie] = useState<IMovie | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [actors, setActors] = useState<IActor[]>([]);
+  const [similar, setSimilar] = useState<IMovie[]>([]);
+
   const { id } = useGlobalSearchParams();
+  const local = useLocalSearchParams();
+  const router = useRouter();
+
+  const type = local.type === "tv" ? "tv" : "movie";
 
   useEffect(() => {
     getMovieDetails();
+    getMovieActor();
+    getSimilarMovies();
   }, []);
 
   const getMovieDetails = async () => {
     setIsLoading(true);
-    const data = await movieDetials(+id, "movie");
+    const data = await movieDetials(+id, type);
     setMovie(data);
     setIsLoading(false);
+  };
+
+  const getMovieActor = async () => {
+    const data = await movieCredits(+id, type);
+    setActors(data);
+  };
+  const getSimilarMovies = async () => {
+    const data = await similarMovies(+id, type);
+    setSimilar(data);
   };
 
   return (
@@ -39,7 +65,7 @@ export default function MovieDetail() {
       <View className="w-full">
         <SafeAreaView className="absolute z-[20px] flex-row justify-between items-center w-full py-5">
           <View className="flex-row bg-transparent gap-[10px]">
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.back()}>
               <Ionicons name="arrow-back-circle" size={40} color="white" />
             </TouchableOpacity>
             <Image
@@ -94,6 +120,36 @@ export default function MovieDetail() {
           ))}
         </View>
         <Text className="text-white ml-[10px]">{movie?.overview}</Text>
+      </View>
+
+      {actors.length > 0 && (
+        <View className="mt-5 mb-[10px]">
+          <Text className="text-xl font-bold ml-[10px] mb-5 text-white">
+            Actors
+          </Text>
+          <FlatList
+            data={actors}
+            renderItem={({ item }) => <ActorCard actor={item} />}
+            keyExtractor={(item) =>
+              item.id ? item.id.toString() : Math.random().toString()
+            }
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: 15, gap: 10 }}
+          />
+        </View>
+      )}
+      <View>
+        <Text className="text-xl font-bold ml-[10px] mb-5 text-white">
+          Similar Movies
+        </Text>
+        <FlatList
+          data={similar}
+          renderItem={({ item }) => <MovieCard item={item} />}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal
+          contentContainerStyle={{ gap: 15 }}
+        />
       </View>
     </ScrollView>
   );
