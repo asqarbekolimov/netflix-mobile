@@ -1,8 +1,10 @@
 import MovieCard from "@/components/card/movie-card";
 import Banner from "@/components/shared/banner";
 import Loader from "@/components/shared/loader";
+import { useGloabalContext } from "@/context";
 import { popularMovies, topRatedMovies, trendingMovies } from "@/lib/api";
 import { IMovie } from "@/types";
+import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, ScrollView, Text, View } from "react-native";
 
@@ -11,6 +13,11 @@ export default function Browse() {
   const [topRated, setTopRated] = useState<IMovie[]>([]);
   const [popular, setPopular] = useState<IMovie[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { user } = useGloabalContext();
+
+  if (isLoading) return <Loader />;
+  if (user === null) return <Redirect href={"/auth"} />;
 
   useEffect(() => {
     getTrendingMovies();

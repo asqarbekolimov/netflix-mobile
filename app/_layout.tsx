@@ -12,6 +12,7 @@ import "react-native-reanimated";
 import "../global.css";
 
 import { StatusBar } from "expo-status-bar";
+import { Provider } from "@/context";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -46,12 +47,15 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   return (
-    <ThemeProvider value={DarkTheme}>
-      <StatusBar style="light" />
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="search" options={{ headerShown: false }} />
-      </Stack>
-    </ThemeProvider>
+    <Provider>
+      <ThemeProvider value={DarkTheme}>
+        <StatusBar style="light" />
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="search" options={{ headerShown: false }} />
+          <Stack.Screen name="auth" options={{ headerShown: false }} />
+        </Stack>
+      </ThemeProvider>
+    </Provider>
   );
 }
